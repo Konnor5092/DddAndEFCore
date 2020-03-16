@@ -9,13 +9,13 @@ namespace App
     {
         public SchoolContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
-            optionsBuilder.UseSqlServer(GetConnectionString());
+            //var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
+            //optionsBuilder.UseSqlServer(GetConnectionString());
 
-            return new SchoolContext(optionsBuilder.Options);
+            return new SchoolContext(GetConnectionString(), true);
         }
 
-        private static string GetConnectionString()
+        public static string GetConnectionString()
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

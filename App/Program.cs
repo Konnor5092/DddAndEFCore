@@ -10,28 +10,16 @@ namespace App
     {
         public static void Main()
         {
-            ILoggerFactory loggerFactory = CreateLoggerFactory();
+            string connectionString = SchoolContextFactory.GetConnectionString();
 
-            var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
-            optionsBuilder
-                .UseLoggerFactory(loggerFactory)
-                .EnableSensitiveDataLogging();
-
-            using (var context = new SchoolContext(optionsBuilder.Options))
+            using (var context = new SchoolContext(connectionString, true))
             {
                 Student student = context.Students.Find(1L);
-            }
-        }
+                student.Name += 2;
+                student.Email += 2;
 
-        private static ILoggerFactory CreateLoggerFactory()
-        {
-            return LoggerFactory.Create(builder =>
-            {
-                builder
-                    .AddFilter((category, level) =>
-                        category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
-                    .AddConsole();
-            });
+                context.SaveChanges();
+            }
         }
     }
 }
