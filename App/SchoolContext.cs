@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +30,9 @@ namespace App
                     .AddConsole();
             });
 
-            optionsBuilder.UseSqlServer(_connectionString);
+            optionsBuilder
+                .UseSqlServer(_connectionString)
+                .UseLazyLoadingProxies();
 
             if (_useConsoleLogger) 
                 optionsBuilder
@@ -43,13 +48,8 @@ namespace App
                 x.Property(p => p.Id).HasColumnName("StudentID");
                 x.Property(p => p.Email);
                 x.Property(p => p.Name);
-                x.Property(p => p.FavoriteCourseId);
+                x.HasOne(p => p.FavoriteCourse).WithMany();
             });
-
-            modelBuilder.Entity<Student>().HasData(
-                new Student { Id = 1, Name = "Alice", Email = "alice@gmail.com", FavoriteCourseId = 2},
-                new Student { Id = 2, Name = "Bob", Email = "bob@outlook.com", FavoriteCourseId = 2}
-            );
 
             modelBuilder.Entity<Course>(x =>
             {
@@ -64,6 +64,10 @@ namespace App
                 new Course { Id = 3, Name = "Literature"},
                 new Course { Id = 4, Name = "Trigonometry"},
                 new Course { Id = 5, Name = "Microeconomics"});
+           
+            modelBuilder.Entity<Student>().HasData(
+                new {Id = 1L, Name = "Alice", Email = "alice@gmail.com", FavoriteCourseId = 2L},
+                new {Id = 2L, Name = "Bob", Email = "bob@outlook.com", FavoriteCourseId = 2L});     
         }
     }
 }
