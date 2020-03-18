@@ -12,18 +12,18 @@ namespace App
     public class Program
     {
         public static void Main()
-        {           
-            string connectionString = SchoolContextFactory.GetConnectionString();
+        {
+            string result = Execute(x => x.CheckStudentFavoriteCourse(1, 2));
+        }
 
-            Console.WriteLine("I am a spoon");
+        private static string Execute(Func<StudentController, string> func)
+        {
+            string connectionString = SchoolContextFactory.GetConnectionString();
 
             using (var context = new SchoolContext(connectionString, true))
             {
-                Student student = context.Students
-                    //.Include(f => f.FavoriteCourse)
-                    .SingleOrDefault(x => x.Id == 1);
-
-                context.SaveChanges();
+                var controller = new StudentController(context);
+                return func(controller);
             }
         }
     }

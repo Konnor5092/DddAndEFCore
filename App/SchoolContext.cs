@@ -58,12 +58,21 @@ namespace App
                 x.Property(p => p.Name);
             });
 
+            modelBuilder.Entity<Enrollment>(x => 
+            {
+                x.ToTable("Enrollment").HasKey(k => k.Id);
+                x.Property(p => p.Id).HasColumnName("EnrollmentId");
+                x.HasOne(p => p.Course).WithMany();
+                x.HasOne(p => p.Student).WithMany();
+                x.Property(p => p.Grade);
+            });
+
             modelBuilder.Entity<Course>().HasData(
-                new Course { Id = 1, Name = "Calculus"},
-                new Course { Id = 2, Name = "Chemistry"},
-                new Course { Id = 3, Name = "Literature"},
-                new Course { Id = 4, Name = "Trigonometry"},
-                new Course { Id = 5, Name = "Microeconomics"});
+                new { Id = 1L, Name = "Calculus"},
+                new { Id = 2L, Name = "Chemistry"},
+                new { Id = 3L, Name = "Literature"},
+                new { Id = 4L, Name = "Trigonometry"},
+                new { Id = 5L, Name = "Microeconomics"});
            
             modelBuilder.Entity<Student>().HasData(
                 new {Id = 1L, Name = "Alice", Email = "alice@gmail.com", FavoriteCourseId = 2L},
